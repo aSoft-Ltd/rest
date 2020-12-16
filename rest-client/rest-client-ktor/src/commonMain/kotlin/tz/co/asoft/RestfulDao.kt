@@ -12,13 +12,14 @@ open class RestfulDao<T : Entity>(
     override val serializer: KSerializer<T>,
     override val root: String,
     override val subRoot: String?,
+    override var token: String?,
     override val client: HttpClient
 ) : IRestfulDao<T> {
-
     fun HttpRequestBuilder.appendHeaders() {
         options.headers.forEach { (k, v) ->
             header(k, v)
         }
+        if (token != null) header("Authorization", "Bearer $token")
     }
 
     override suspend fun create(list: Collection<T>): List<T> {
@@ -80,16 +81,14 @@ open class RestfulDao<T : Entity>(
         return Result.parse(serializer.nullable, json).response()
     }
 
-//    override suspend fun load(startAt: String?, limit: Int): List<T> {
-//        var query = "size=$limit"
-//        if (startAt != null) {
-//            query += "&startAt=$startAt"
-//        }
-//        val json = client.get<String>("$path/page?$query") {
-//            appendHeaders()
-//        }
-//        return Result.parse(ListSerializer(serializer), json).response()
-//    }
+    override suspend fun page(no: Int, size: Int): List<T> {
+        require(no > 0) { "Page Numbering starts from 1" }
+        val query = "no=$no&size=$size"
+        val json = client.get<String>("$path/page?$query") {
+            appendHeaders()
+        }
+        return Result.parse(ListSerializer(serializer), json).response()
+    }
 
     override suspend fun all(): List<T> {
         val json = client.get<String>("$path/all") {
@@ -104,6 +103,4 @@ open class RestfulDao<T : Entity>(
         }
         return Result.parse(ListSerializer(serializer), json).response()
     }
-
-//    override fun pageLoader(predicate: (T) -> Boolean): PageLoader<*, T> = RestfulPageLoader(this, predicate)
 }

@@ -13,9 +13,8 @@ internal suspend fun <T : Entity> IRestModule<T>.page(call: ApplicationCall, log
             val params = call.request.queryParameters
             val size = params["size"]?.toIntOrNull()
             if (size != null) {
-                val startAt = params["startAt"]
-                val res: Result<List<T>> =
-                    TODO("implemente page for rest") //Success(controller.load(startAt = startAt, limit = size))
+                val no = params["no"]?.toIntOrNull() ?: 1
+                val res: Result<List<T>> = Success(controller.page(no, size))
                 send(call, log, HttpStatusCode.OK, ListSerializer(serializer), res)
             } else {
                 val res = Failure(
