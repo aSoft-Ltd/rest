@@ -5,7 +5,7 @@ object vers {
     object asoft {
         val access = "0.0.12"
         val viewmodel = "0.0.2"
-        val rest = "0.0.1"
+        val rest = "0.0.10"
         val jwt = "0.0.1"
         val form = "0.0.20"
         val logging = "0.0.1"

@@ -4,6 +4,9 @@ plugins {
     id("tz.co.asoft.library")
 }
 
+group = "tz.co.asoft"
+version = vers.asoft.rest
+
 kotlin {
     target {
         targetJava("1.8")

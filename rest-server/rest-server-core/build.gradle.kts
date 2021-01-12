@@ -3,6 +3,8 @@ plugins {
     kotlin("plugin.serialization")
     id("tz.co.asoft.library")
 }
+group = "tz.co.asoft"
+version = vers.asoft.rest
 
 kotlin {
     multiplatformLib()
