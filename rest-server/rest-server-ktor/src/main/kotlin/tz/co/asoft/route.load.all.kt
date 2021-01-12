@@ -4,7 +4,7 @@ import io.ktor.application.*
 import io.ktor.http.*
 import kotlinx.serialization.builtins.ListSerializer
 
-internal suspend fun <T : Entity> IRestModule<T>.loadAll(call: ApplicationCall, log: Logger) = try {
+internal suspend fun <T : Entity> IRestModule<T>.loadAll(call: ApplicationCall, log: Logger, permit: ISystemPermission) = try {
 //    when (val state = authorize(call, log, "load all entities", ":read")) {
 //        is AuthorizationState.UnAuthorized -> {
 //            send(call, log, state.code, serializer, state.res)
@@ -14,7 +14,7 @@ internal suspend fun <T : Entity> IRestModule<T>.loadAll(call: ApplicationCall, 
 //            send(call, log, HttpStatusCode.OK, ListSerializer(serializer), res)
 //        }
 //    }
-    val res = Success(controller.all())
+    val res = Success(controller.all().await())
     send(call, log, HttpStatusCode.OK, ListSerializer(serializer), res)
 } catch (e: Throwable) {
     log.failure(e)

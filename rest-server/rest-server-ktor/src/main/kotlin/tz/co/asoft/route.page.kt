@@ -4,8 +4,8 @@ import io.ktor.application.*
 import io.ktor.http.*
 import kotlinx.serialization.builtins.ListSerializer
 
-internal suspend fun <T : Entity> IRestModule<T>.page(call: ApplicationCall, log: Logger) = try {
-    when (val state = authorize(call, log, "load page", ":read")) {
+internal suspend fun <T : Entity> IRestModule<T>.page(call: ApplicationCall, log: Logger, permit: ISystemPermission) = try {
+    when (val state = authorize(call, log, "load page", permit)) {
         is AuthorizationState.UnAuthorized -> {
             send(call, log, state.code, serializer, state.res)
         }
@@ -14,7 +14,7 @@ internal suspend fun <T : Entity> IRestModule<T>.page(call: ApplicationCall, log
             val size = params["size"]?.toIntOrNull()
             if (size != null) {
                 val no = params["no"]?.toIntOrNull() ?: 1
-                val res: Result<List<T>> = Success(controller.page(no, size))
+                val res: Result<List<T>> = Success(controller.page(no, size).await())
                 send(call, log, HttpStatusCode.OK, ListSerializer(serializer), res)
             } else {
                 val res = Failure(

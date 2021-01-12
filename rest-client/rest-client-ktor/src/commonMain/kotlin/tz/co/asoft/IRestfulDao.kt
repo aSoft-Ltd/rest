@@ -10,7 +10,7 @@ interface IRestfulDao<T : Entity> : IDao<T> {
     val subRoot: String?
     val serializer: KSerializer<T>
 
-    var token: String?
+    val token: String?
 
     val path get() = "${options.url}/${options.version}/$root" + if (subRoot != null) "/$subRoot" else ""
 }
