@@ -12,10 +12,10 @@ suspend fun <T : Entity> IRestModule<T>.authorize(
     call: ApplicationCall,
     log: Logger,
     action: String,
-    permit: String
+    permit: ISystemPermission
 ): AuthorizationState<T> {
     val token = call.request.authorization()?.split(" ")?.getOrNull(1)
-    log.info("Authorizing request from ${call.request.origin.url} with api key $token")
+    log.info("Authorizing request from ${call.request.origin.url} with token $token")
     if (token == null) {
         val res = Failure(
             error = "Failed to $action",
@@ -59,27 +59,39 @@ suspend fun <T : Entity> IRestModule<T>.authorize(
         return AuthorizationState.UnAuthorized(HttpStatusCode.Unauthorized, res)
     }
 
-    val hosts = jwt.payload.hostsOrNull ?: listOf()
+    // DELETE ONLY IF YOU ARE CERTAIN YOU WONT AUTHORIZE SPECIFIC HOSTS
+//    val hosts = jwt.payload.hostsOrNull ?: listOf()
+//
+//    if (!hosts.contains(call.request.origin.url)) {
+//        val res = Result.Failure<T>(
+//            error = "Failed to $action",
+//            type = "Unauthorized",
+//            reason = "$jwt isn't configured to access data from ${call.request.origin.url}"
+//        )
+//        log.warn("A valid $jwt tried to $action while it is not permitted to do so from ${call.request.origin.url}")
+//        return AuthorizationState.UnAuthorized(HttpStatusCode.Unauthorized, res)
+//    }
 
-    if (!hosts.contains(call.request.origin.url)) {
+    val authZ = AuthorizationState.Authorized.parseOrNull<T>(jwt)
+    if (authZ == null) {
         val res = Result.Failure<T>(
             error = "Failed to $action",
             type = "Unauthorized",
-            reason = "$jwt isn't configured to access data from ${call.request.origin.url}"
+            reason = "Failed to convert jwt into Authorization state"
         )
-        log.warn("A valid $jwt tried to $action while it is not permitted to do so from ${call.request.origin.url}")
+        log.warn("jwt (token=$token) tried to access data at $path and system failed to parse it")
         return AuthorizationState.UnAuthorized(HttpStatusCode.Unauthorized, res)
     }
 
-//    val claims = jwt.payload.claimsOrNull ?: listOf()
-//    if (!api.permitsFor(root, subRoot)suspend .contains(permit)) {
-//        val res = Result.Failure<T>(
-//            msg = "Failed to $action",
-//            type = "Unauthorized",
-//            reason = "api(key=$apiKey,name=${api.name}) has no permission to $action"
-//        )
-//        log.warn("A valid api(key=$apiKey,name=${api.name}) tried to $action while it is not permitted to do so")
-//        return AuthorizationState.UnAuthorized(HttpStatusCode.Unauthorized, res)
-//    }
-    return AuthorizationState.Authorized()
+    val claims = authZ.principle.claims
+    if (!claims.contains(permit.title)) {
+        val res = Result.Failure<T>(
+            error = "Failed to $action",
+            type = "Unauthorized",
+            reason = "Token $token has no permission that ${permit.details}"
+        )
+        log.warn("A valid token ($token), tried to $action while it is not permitted to do so")
+        return AuthorizationState.UnAuthorized(HttpStatusCode.Unauthorized, res)
+    }
+    return authZ
 }

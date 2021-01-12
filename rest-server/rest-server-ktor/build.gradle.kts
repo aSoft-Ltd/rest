@@ -11,12 +11,25 @@ kotlin {
     sourceSets {
         val main by getting {
             dependencies {
-                api(project(":rest-server-core"))
-                api(asoft("result", vers.asoft.result))
-                api(asoft("logging-core", vers.asoft.logging))
                 api("io.ktor:ktor-server-cio:${vers.ktor}")
                 api("io.ktor:ktor-network:${vers.ktor}")
+                api(project(":rest-server-core"))
+                api(asoft("access-system", vers.asoft.access))
+                api(asoft("result", vers.asoft.result))
+                api(asoft("logging-core", vers.asoft.logging))
                 api(asoft("jwt-rs", vers.asoft.jwt))
+            }
+        }
+    }
+}
+
+configurePublishing {
+    repositories {
+        maven("https://maven.pkg.jetbrains.space/asofttz/p/libs/maven") {
+            name = "space"
+            credentials {
+                username = System.getenv("SPACE_USERNAME") ?: System.getenv("JB_SPACE_CLIENT_ID")
+                password = System.getenv("SPACE_PASSWORD") ?: System.getenv("JB_SPACE_CLIENT_SECRET")
             }
         }
     }
