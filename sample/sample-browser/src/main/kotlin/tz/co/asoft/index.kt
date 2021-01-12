@@ -12,9 +12,10 @@ import styled.styledDiv
 val kfg by lazy { konfig() }
 
 fun main() = document.getElementById("root").setContent {
+    TodoApp.configureDao(TodoAppDao(InMemoryDao("doer"), InMemoryDao("todo")))
     browserRouter {
         ThemeProvider {
-            TodoPane()
+            TodoApp()
         }
     }
 }

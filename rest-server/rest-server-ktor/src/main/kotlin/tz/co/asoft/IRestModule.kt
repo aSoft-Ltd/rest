@@ -13,4 +13,13 @@ interface IRestModule<T : Entity> {
     val serializer: KSerializer<T>
     val controller: IRestController<T>
     fun setRoutes(app: Application, log: Logger): Routing
+
+    /*
+    Permissions
+     */
+    val readPermission: ISystemPermission
+    val createPermission: ISystemPermission
+    val updatePermission: ISystemPermission
+    val deletePermission: ISystemPermission
+    val wipePermission: ISystemPermission
 }
