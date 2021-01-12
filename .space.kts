@@ -1,13 +1,10 @@
 job("Build & Test Project") {
-    container("markhobson/maven-chrome:jdk-11") {
-        kotlinScript { api ->
-            if (api.gitBranch() == "refs/heads/master-dev") {
-                api.gradlew("build")
-            } else {
-                println("Code submitted")
-            }
+    startOn {
+        codeReviewOpened {
+            enabled = true
         }
     }
+    gradlew("markhobson/maven-chrome:jdk-11", "build")
 }
 
 job("Deploy Project") {
