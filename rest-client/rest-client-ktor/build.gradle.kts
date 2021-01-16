@@ -15,7 +15,7 @@ kotlin {
                 api(asoft("files", vers.asoft.files))
                 api(asoft("form-http", vers.asoft.form))
                 api(asoft("persist-core", vers.asoft.persist))
-                api(asoft("result", vers.asoft.result))
+                api(asoft("result-core", vers.asoft.duality))
             }
         }
     }
