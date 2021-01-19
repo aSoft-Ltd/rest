@@ -17,10 +17,6 @@ kotlin {
                 api("io.ktor:ktor-server-cio:${vers.ktor}")
                 api("io.ktor:ktor-network:${vers.ktor}")
                 api(project(":rest-server-core"))
-                api(asoft("access-system", vers.asoft.access))
-                api(asoft("result-core", vers.asoft.duality))
-                api(asoft("logging-core", vers.asoft.logging))
-                api(asoft("jwt-rs", vers.asoft.jwt))
             }
         }
     }

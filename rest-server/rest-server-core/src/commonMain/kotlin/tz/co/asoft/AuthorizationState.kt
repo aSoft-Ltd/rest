@@ -1,6 +1,5 @@
 package tz.co.asoft
 
-import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.json.Json
 
 sealed class AuthorizationState<T> {
@@ -42,5 +41,5 @@ sealed class AuthorizationState<T> {
         }
     }
 
-    class UnAuthorized<T>(val code: HttpStatusCode, val res: Result<T>) : AuthorizationState<T>()
+    class UnAuthorized<T>(val code: Int, val res: Result<T>) : AuthorizationState<T>()
 }

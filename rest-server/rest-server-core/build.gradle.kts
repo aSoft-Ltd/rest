@@ -12,6 +12,10 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(asoft("persist-core", vers.asoft.persist))
+                api(asoft("access-system", vers.asoft.access))
+                api(asoft("result-core", vers.asoft.duality))
+                api(asoft("logging-core", vers.asoft.logging))
+                api(asoft("jwt-rs", vers.asoft.jwt))
             }
         }
     }
