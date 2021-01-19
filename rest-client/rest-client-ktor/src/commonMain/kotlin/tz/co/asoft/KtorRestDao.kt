@@ -9,15 +9,15 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.builtins.serializer
 
-open class RestfulDao<T : Entity>(
-    override val options: RestfulOptions,
+open class KtorRestDao<T : Entity>(
+    override val options: KtorDaoOptions,
     override val serializer: KSerializer<T>,
     override val scope: CoroutineScope = CoroutineScope(SupervisorJob()),
     override val root: String,
     override val subRoot: String?,
     override var token: String?,
     override val client: HttpClient
-) : IRestfulDao<T> {
+) : IKtorRestDao<T> {
     fun HttpRequestBuilder.appendHeaders() {
         options.headers.forEach { (k, v) ->
             header(k, v)
