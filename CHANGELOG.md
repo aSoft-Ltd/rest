@@ -1,3 +1,6 @@
+# 0.0.21 : 2021.01.19
+- Updated persist from 0.1.10 to 0.2.10
+
 # 0.0.20 : 2021.01.17
 - Updated result from 0.0.1 to result-core 0.0.21
 - Updated reakt from 0.0.7 to 0.0.90
