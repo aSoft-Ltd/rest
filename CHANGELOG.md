@@ -1,3 +1,6 @@
+# 0.0.22 : 2021.01.19
+- Moved authorize to ktor-server-core
+
 # 0.0.21 : 2021.01.19
 - Updated persist from 0.1.10 to 0.2.10
 
