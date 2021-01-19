@@ -1,6 +1,6 @@
 package tz.co.asoft
 
-class RestfulOptions(
+class KtorDaoOptions(
     val url: String,
     val version: String,
     val headers: Map<String, String> = mapOf()
