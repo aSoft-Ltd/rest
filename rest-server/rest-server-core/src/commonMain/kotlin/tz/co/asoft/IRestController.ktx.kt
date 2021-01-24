@@ -4,6 +4,7 @@ suspend fun <T : Entity> IRestController<T>.authorize(
     token: String?,
     log: Logger,
     keyFetcher: KeyFetcher,
+    verifier: JWTVerifier,
     action: String,
     origin: String,
     permit: ISystemPermission
@@ -38,11 +39,11 @@ suspend fun <T : Entity> IRestController<T>.authorize(
             type = "Unauthorized",
             reason = "Failed to find key (kid=${jwt.header.kid})"
         )
-        log.warn("Failed to parse jwt (token=$token)")
+        log.warn("Failed to find key (kid=${jwt.header.kid}) to verify jwt")
         return AuthorizationState.UnAuthorized(401, res)
     }
 
-    if (jwt.verifyRS512(key) is JWTVerification.Invalid) {
+    if (verifier.verify(jwt) is JWTVerification.Invalid) {
         val res = Result.Failure<T>(
             error = "Failed to $action",
             type = "Unauthorized",

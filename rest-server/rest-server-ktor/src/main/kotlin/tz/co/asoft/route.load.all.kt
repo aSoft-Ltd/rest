@@ -15,8 +15,8 @@ internal suspend fun <T : Entity> IRestModule<T>.loadAll(call: ApplicationCall, 
 //        }
 //    }
     val res = Success(controller.all().await())
-    send(call, log, HttpStatusCode.OK, ListSerializer(serializer), res)
+    send(call, log, HttpStatusCode.OK.value, ListSerializer(serializer), res)
 } catch (e: Throwable) {
     log.failure(e)
-    send(call, log, HttpStatusCode.InternalServerError, serializer, e.toFailure())
+    send(call, log, HttpStatusCode.InternalServerError.value, serializer, e.toFailure())
 }

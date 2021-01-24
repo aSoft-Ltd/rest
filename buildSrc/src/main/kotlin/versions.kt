@@ -6,7 +6,7 @@ object vers {
         val access = "0.0.12"
         val viewmodel = "0.0.62"
         val rest = "0.1.0"
-        val jwt = "0.0.2"
+        val jwt = "0.0.30"
         val form = "0.0.20"
         val logging = "0.0.1"
         val duality = "0.0.21"

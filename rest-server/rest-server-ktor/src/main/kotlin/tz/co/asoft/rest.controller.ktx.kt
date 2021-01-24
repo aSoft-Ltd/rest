@@ -9,10 +9,10 @@ import kotlinx.serialization.KSerializer
 suspend fun <T> send(
     call: ApplicationCall,
     log: Logger,
-    code: HttpStatusCode,
+    code: Int,
     serializer: KSerializer<T>,
     res: Result<T>
-) = call.respondText(Result.stringify(serializer, res), ContentType.Application.Json, status = code).also {
+) = call.respondText(Result.stringify(serializer, res), ContentType.Application.Json, status = HttpStatusCode.fromValue(code)).also {
     when (res.status) {
         ResultStatus.Success -> when (val data = res.success()) {
             is Entity -> log.info("Sent entity with uid: ${data.uid} successfully")

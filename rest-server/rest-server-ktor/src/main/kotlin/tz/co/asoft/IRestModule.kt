@@ -9,6 +9,7 @@ interface IRestModule<T : Entity> {
     val root: String
     val subRoot: String?
     val keyFetcher: KeyFetcher
+    val verifier: JWTVerifier
     val path get() = "/$version/$root" + if (subRoot != null) "/$subRoot" else ""
     val serializer: KSerializer<T>
     val controller: IRestController<T>

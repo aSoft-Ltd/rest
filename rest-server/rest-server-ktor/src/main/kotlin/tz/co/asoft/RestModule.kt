@@ -10,6 +10,7 @@ open class RestModule<T : Entity>(
     override val root: String,
     override val subRoot: String?,
     override val keyFetcher: KeyFetcher,
+    override val verifier: JWTVerifier,
     override val serializer: KSerializer<T>,
     override val controller: IRestController<T>,
     override val readPermission: ISystemPermission,
