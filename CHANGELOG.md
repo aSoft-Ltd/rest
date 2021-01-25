@@ -1,3 +1,6 @@
+# 0.1.10 : 2021.01.25
+- Published to maven central
+
 # 0.0.22 : 2021.01.19
 - Moved authorize to ktor-server-core
 

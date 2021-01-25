@@ -7,7 +7,6 @@ import io.ktor.request.authorization
 import io.ktor.util.KtorExperimentalAPI
 import tz.co.asoft.JWTVerification.Invalid
 
-@OptIn(KtorExperimentalAPI::class)
 suspend fun <T : Entity> IRestModule<T>.authorize(
     call: ApplicationCall,
     action: String,

@@ -4,7 +4,7 @@ suspend fun <T : Entity> IRestController<T>.authorize(
     token: String?,
     log: Logger,
     keyFetcher: KeyFetcher,
-    verifier: JWTVerifier,
+    verifier: (SecurityKey) -> JWTVerifier,
     action: String,
     origin: String,
     permit: ISystemPermission
@@ -43,46 +43,34 @@ suspend fun <T : Entity> IRestController<T>.authorize(
         return AuthorizationState.UnAuthorized(401, res)
     }
 
-    if (verifier.verify(jwt) is JWTVerification.Invalid) {
+    if (verifier(key).verify(jwt) is JWTVerification.Invalid) {
         val res = Result.Failure<T>(
             error = "Failed to $action",
             type = "Unauthorized",
-            reason = "Failed to find validate jwt"
+            reason = "jwt sent was invalid"
         )
         log.warn("An Invalid jwt (token=$token)")
         return AuthorizationState.UnAuthorized(401, res)
     }
-
-    // DELETE ONLY IF YOU ARE CERTAIN YOU WONT AUTHORIZE SPECIFIC HOSTS
-//    val hosts = jwt.payload.hostsOrNull ?: listOf()
-//
-//    if (!hosts.contains(call.request.origin.url)) {
-//        val res = Result.Failure<T>(
-//            error = "Failed to $action",
-//            type = "Unauthorized",
-//            reason = "$jwt isn't configured to access data from ${call.request.origin.url}"
-//        )
-//        log.warn("A valid $jwt tried to $action while it is not permitted to do so from ${call.request.origin.url}")
-//        return AuthorizationState.UnAuthorized(401, res)
-//    }
 
     val authZ = AuthorizationState.Authorized.parseOrNull<T>(jwt)
     if (authZ == null) {
         val res = Result.Failure<T>(
             error = "Failed to $action",
             type = "Unauthorized",
-            reason = "Failed to convert jwt into Authorization state"
+            reason = "Failed to convert jwt into a known Authorization state"
         )
         log.warn("jwt (token=$token) tried to access data and the server failed to parse it")
         return AuthorizationState.UnAuthorized(401, res)
     }
 
-    val claims = authZ.principle.claims
-    if (!claims.contains(permit.title)) {
+    val principle = authZ.principle
+
+    if (!principle.has(permit)) {
         val res = Result.Failure<T>(
             error = "Failed to $action",
             type = "Unauthorized",
-            reason = "Token $token has no permission that ${permit.details}"
+            reason = "JWT has no permission that ${permit.details}"
         )
         log.warn("A valid token ($token), tried to $action while it is not permitted to do so")
         return AuthorizationState.UnAuthorized(401, res)
