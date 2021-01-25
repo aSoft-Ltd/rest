@@ -31,6 +31,8 @@ kotlin {
                 implementation(asoft("reakt-tables", vers.asoft.reakt))
                 implementation(asoft("rich-text-editor-react", "0.0.1"))
                 implementation(asoft("viewmodel-react", vers.asoft.viewmodel))
+                implementation(asoft("persist-inmemory", vers.asoft.persist))
+                implementation(asoft("form-react", vers.asoft.form))
             }
         }
     }

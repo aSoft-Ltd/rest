@@ -6,17 +6,18 @@ import kotlinx.css.properties.boxShadow
 import react.RBuilder
 import styled.css
 
-fun RBuilder.TodoPane() = Grid {
-    css {
-        position = Position.absolute
-        left = 100.px
-        top = 100.px
-        width = 400.px
-        padding(0.5.em)
-        boxShadow(Color.gray, blurRadius = 2.px, spreadRadius = 1.px)
+fun RBuilder.TodoPane(
+    todos: List<Todo>,
+    onToggled: (Todo) -> Unit,
+    onDelete: (Todo) -> Unit,
+    onTodoCreated: (Todo) -> Unit
+) = Grid {
+    Grid { theme ->
+        css { +theme.text.h3.clazz }
+        +"Todo App"
     }
-    repeat(5) {
-        Todo(null)
+    if (todos.isEmpty()) Todo(null, {}, {}) else todos.forEach {
+        Todo(todo = it, onToggled = { onToggled(it) }, onDelete = { onDelete(it) })
     }
-    PostEditor(onSubmit = {})
+    PostEditor(onSubmit = { onTodoCreated(Todo(details = it)) })
 }
