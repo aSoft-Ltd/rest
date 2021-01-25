@@ -16,6 +16,7 @@ fun Application.installCORS() {
         method(HttpMethod.Patch)
         method(HttpMethod.Delete)
         header(HttpHeaders.XForwardedProto)
+        header(HttpHeaders.Authorization)
         anyHost()
         allowCredentials = true
         maxAgeInSeconds = 1000

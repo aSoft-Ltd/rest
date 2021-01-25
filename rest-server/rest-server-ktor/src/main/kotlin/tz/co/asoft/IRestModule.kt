@@ -9,8 +9,18 @@ interface IRestModule<T : Entity> {
     val root: String
     val subRoot: String?
     val keyFetcher: KeyFetcher
+    val verifier: (SecurityKey)->JWTVerifier
     val path get() = "/$version/$root" + if (subRoot != null) "/$subRoot" else ""
     val serializer: KSerializer<T>
     val controller: IRestController<T>
     fun setRoutes(app: Application, log: Logger): Routing
+
+    /*
+    Permissions
+     */
+    val readPermission: ISystemPermission
+    val createPermission: ISystemPermission
+    val updatePermission: ISystemPermission
+    val deletePermission: ISystemPermission
+    val wipePermission: ISystemPermission
 }
