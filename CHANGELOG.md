@@ -1,3 +1,7 @@
+# 0.1.20 : 2021.02.03
+- Updated jwt from 0.0.30 to 0.0.40
+- removed RestModule implementation, now you have to implement it on your own
+
 # 0.1.10 : 2021.01.25
 - Published to maven central
 

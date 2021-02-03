@@ -4,10 +4,10 @@ object vers {
     val nexus_staging = "0.22.0"
 
     object asoft {
-        val access = "0.0.14"
+        val access = "0.0.20"
         val viewmodel = "0.0.62"
-        val rest = "0.1.10"
-        val jwt = "0.0.30"
+        val rest = "0.1.20"
+        val jwt = "0.0.40"
         val form = "0.0.20"
         val logging = "0.0.1"
         val duality = "0.0.21"

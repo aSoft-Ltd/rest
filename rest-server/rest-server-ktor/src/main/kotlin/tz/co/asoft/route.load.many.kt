@@ -4,8 +4,14 @@ import io.ktor.application.*
 import io.ktor.http.*
 import kotlinx.serialization.builtins.ListSerializer
 
-internal suspend fun <T : Entity> IRestModule<T>.loadMany(call: ApplicationCall, log: Logger, permit: ISystemPermission) = try {
-    when (val state = authorize(call, "load entities", log, permit)) {
+internal suspend fun <T : Entity> IRestModule<T>.loadMany(
+    call: ApplicationCall,
+    action: String = "load entities",
+    log: Logger,
+    permit: ISystemPermission,
+    permitValue: String
+) = try {
+    when (val state = authorize(call, action, log, permit, permitValue)) {
         is AuthorizationState.UnAuthorized -> {
             send(call, log, state.code, serializer, state.res)
         }
