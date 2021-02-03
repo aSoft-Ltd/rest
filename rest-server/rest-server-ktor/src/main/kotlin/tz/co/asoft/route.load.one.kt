@@ -4,9 +4,15 @@ import io.ktor.application.*
 import io.ktor.http.*
 import kotlinx.serialization.builtins.nullable
 
-internal suspend fun <T : Entity> IRestModule<T>.loadOne(call: ApplicationCall, log: Logger, permit: ISystemPermission) = try {
+internal suspend fun <T : Entity> IRestModule<T>.loadOne(
+    call: ApplicationCall,
+    action: String = "load entity",
+    log: Logger,
+    permit: ISystemPermission,
+    permitValue: String
+) = try {
     val id = call.parameters["uid"].toString()
-    when (val state = authorize(call, "load entity(uid=$id)",log, permit)) {
+    when (val state = authorize(call, action, log, permit, permitValue)) {
         is AuthorizationState.UnAuthorized -> {
             send(call, log, state.code, serializer, state.res)
         }

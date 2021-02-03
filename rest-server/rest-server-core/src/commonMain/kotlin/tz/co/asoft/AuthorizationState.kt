@@ -14,7 +14,7 @@ sealed class AuthorizationState<T> {
                         val user = Json.decodeFromString(User.serializer(), Mapper.encodeToString(userMap))
                         val principle = object : IUserPrinciple {
                             override val account = account
-                            override val claims = jwt.payload.claimsOrNull ?: listOf()
+                            override val claims = jwt.payload.claimsOrNull ?: mapOf()
                             override val user = user
                         }
                         Authorized(principle)
@@ -24,7 +24,7 @@ sealed class AuthorizationState<T> {
                         val app = Json.decodeFromString(ClientApp.serializer(), Mapper.encodeToString(appMap))
                         val principle = object : IClientAppPrinciple {
                             override val account = account
-                            override val claims = jwt.payload.claimsOrNull ?: listOf()
+                            override val claims = jwt.payload.claimsOrNull ?: mapOf()
                             override val app = app
                         }
                         Authorized(principle)

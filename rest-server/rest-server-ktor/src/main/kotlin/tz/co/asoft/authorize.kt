@@ -11,17 +11,19 @@ suspend fun <T : Entity> IRestModule<T>.authorize(
     call: ApplicationCall,
     action: String,
     log: Logger,
-    permit: ISystemPermission
+    permit: ISystemPermission,
+    permitValue: String
 ): AuthorizationState<T> {
     val token = call.authorizationToken()
     val origin = call.request.origin.url
-    return controller.authorize(
+    return authorize(
         token = token,
         log = log,
         keyFetcher = keyFetcher,
         verifier = verifier,
         action = action,
         origin = origin,
-        permit = permit
+        permit = permit,
+        permitValue = permitValue
     )
 }
