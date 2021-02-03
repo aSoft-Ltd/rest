@@ -1,13 +1,14 @@
 package tz.co.asoft
 
-suspend fun <T : Entity> IRestController<T>.authorize(
+suspend fun <T : Entity> authorize(
     token: String?,
     log: Logger,
     keyFetcher: KeyFetcher,
     verifier: (SecurityKey) -> JWTVerifier,
     action: String,
     origin: String,
-    permit: ISystemPermission
+    permit: ISystemPermission,
+    permitValue: String
 ): AuthorizationState<T> {
     log.info("Authorizing request from $origin with token $token")
     if (token == null) {
@@ -66,7 +67,7 @@ suspend fun <T : Entity> IRestController<T>.authorize(
 
     val principle = authZ.principle
 
-    if (!principle.has(permit)) {
+    if (!principle.has(permit, permitValue)) {
         val res = Result.Failure<T>(
             error = "Failed to $action",
             type = "Unauthorized",

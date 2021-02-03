@@ -5,8 +5,14 @@ import io.ktor.features.*
 import io.ktor.http.*
 import kotlinx.serialization.builtins.ListSerializer
 
-internal suspend fun <T : Entity> IRestModule<T>.create(call: ApplicationCall, log: Logger, permit: ISystemPermission) = try {
-    when (val state = authorize(call, "create entity", log, permit)) {
+internal suspend fun <T : Entity> IRestModule<T>.create(
+    call: ApplicationCall,
+    log: Logger,
+    action: String = "create entity",
+    permit: ISystemPermission,
+    permitValue: String
+) = try {
+    when (val state = authorize(call, action, log, permit, permitValue)) {
         is AuthorizationState.UnAuthorized -> {
             send(call, log, state.code, serializer, state.res)
         }
